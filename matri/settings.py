@@ -25,7 +25,7 @@ SECRET_KEY = 'lxn##8_m%5zw&ezjy=3-t^+&+h1en6aiu^6_&(n$dg7*&rts_6'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1','matritaxi.herokuapp.com']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
