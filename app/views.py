@@ -1,8 +1,7 @@
-from django.shortcuts import render
+
 
 # Create your views here.
 from django.shortcuts import render
-from rest_framework.serializers import Serializer
 
 # Create your views here.
 from .serialiser import *
@@ -214,41 +213,41 @@ class GetFullInfo(APIView):
                 'Error':'Something went wrong'
             })
 
-class VerifyOtp(APIView):
-    def post(self,request):
-        try:
-            mobile_number=request.GET.get('mobile_number')
-            data=request.data
-            serializer=ValidatorSerializer(data=data)
-            if serializer.is_valid():
-                obj=Registration.objects.filter(mobile_number=mobile_number).first()
-                if obj is not None:
-                    if serializer.data['otp']==obj.otp:
-                        return Response({
-                            'status':'Success',
-                            'Details':'Otp verify successfully'
-                        })
-                    else:
-                        return Response({
-                            'status':'Failure',
-                            'Details':'Otp not match'
-                        })
-                else:
-                    return Response({
-                        'status':'Failure',
-                        'Details':'Mobile number not found'
-                    })
-            else:
-                return Response({
-                    'status':'Failure',
-                    'Error':serializer.errors
-                })
-        except Exception as e:
-            print(e)
-            return Response({
-                'status':'Failure',
-                'Error':'Something went wrong'
-            })
+# class VerifyOtp(APIView):
+#     def post(self,request):
+#         try:
+#             mobile_number=request.GET.get('mobile_number')
+#             data=request.data
+#             serializer=ValidatorSerializer(data=data)
+#             if serializer.is_valid():
+#                 obj=Registration.objects.filter(mobile_number=mobile_number).first()
+#                 if obj is not None:
+#                     if serializer.data['otp']==obj.otp:
+#                         return Response({
+#                             'status':'Success',
+#                             'Details':'Otp verify successfully'
+#                         })
+#                     else:
+#                         return Response({
+#                             'status':'Failure',
+#                             'Details':'Otp not match'
+#                         })
+#                 else:
+#                     return Response({
+#                         'status':'Failure',
+#                         'Details':'Mobile number not found'
+#                     })
+#             else:
+#                 return Response({
+#                     'status':'Failure',
+#                     'Error':serializer.errors
+#                 })
+#         except Exception as e:
+#             print(e)
+#             return Response({
+#                 'status':'Failure',
+#                 'Error':'Something went wrong'
+#             })
 
 class PackageView(APIView):
     def post(self,request):

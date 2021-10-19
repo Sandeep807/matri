@@ -1,7 +1,6 @@
 
 from .models import *
 from rest_framework import serializers
-import random
 from .mail import *
 
 class RegistrationSerialiser(serializers.ModelSerializer):
@@ -32,10 +31,9 @@ class PasswordSerialiser(serializers.Serializer):
     new_password=serializers.CharField()
     confirm_password=serializers.CharField()
     old_password=serializers.CharField()
-    mobile_number=serializers.CharField()
 
-class ValidatorSerializer(serializers.Serializer):
-    otp=serializers.CharField(required=True)
+# class ValidatorSerializer(serializers.Serializer):
+#     otp=serializers.CharField(required=True)
 
 # class SendOtpSerializer(serializers.ModelSerializer):
 #     mobilenumber=serializers.CharField(required=True)
