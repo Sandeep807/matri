@@ -1,4 +1,4 @@
-from django.db.models import fields
+
 from .models import *
 from rest_framework import serializers
 import random
@@ -37,18 +37,18 @@ class PasswordSerialiser(serializers.Serializer):
 class ValidatorSerializer(serializers.Serializer):
     otp=serializers.CharField(required=True)
 
-class SendOtpSerializer(serializers.ModelSerializer):
-    mobilenumber=serializers.CharField(required=True)
-    class Meta:
-        fileds=['mobile_number']
-        def update(self , instance , validated_data):
-            instance.mobile_number = validated_data['mobile_number']
-            otp=random.randint(999,9999)
-            instance.otp = otp
-            instance.save()
-            activate_url = f'{otp}'
-            send_otp(instance.email,instance.first_name,activate_url)
-            return instance
+# class SendOtpSerializer(serializers.ModelSerializer):
+#     mobilenumber=serializers.CharField(required=True)
+#     class Meta:
+#         fileds=['mobile_number']
+#         def update(self , instance , validated_data):
+#             instance.mobile_number = validated_data['mobile_number']
+#             otp=random.randint(999,9999)
+#             instance.otp = otp
+#             instance.save()
+#             activate_url = f'{otp}'
+#             send_otp(instance.email,instance.first_name,activate_url)
+#             return instance
 
 
 # class BasicDetailsSerialiser(serializers.ModelSerializer):
