@@ -17,10 +17,10 @@ urlpatterns = [
     path('register/',Register.as_view()),
     path('loginapp/',Login.as_view()),
     path('changeapp/',ChangePassword.as_view()),
-    path('logout/',LogOut.as_view()),
+    #path('logout/',LogOut.as_view()),
     path('findfive/',FindPersonAccordinToGender.as_view()),
     path('getprofile/',GetFullInfo.as_view()),
     path('pack/',PackageView.as_view()),
-    path('otpverify/',VerifyOtp.as_view())
+   # path('otpverify/',VerifyOtp.as_view())
 ]
 # urlpatterns += router.urls

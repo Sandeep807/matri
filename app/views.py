@@ -95,18 +95,18 @@ class Login(APIView):
 #         request.Registration.auth_token.delete()
 #         return Response(status=status.HTTP_200_OK)
 
-class LogOut(APIView):
-    def post(self,request):
-        try:
-            logout(request)
-            return Response({
-            'message':'Logout successfully'
-            })
-        except Exception as e:
-            print(e)
-            return Response({
-                'message':'Something went wrong'
-            })
+# class LogOut(APIView):
+#     def post(self,request):
+#         try:
+#             logout(request)
+#             return Response({
+#             'message':'Logout successfully'
+#             })
+#         except Exception as e:
+#             print(e)
+#             return Response({
+#                 'message':'Something went wrong'
+#             })
 
 
 class ChangePassword(APIView):
