@@ -66,13 +66,7 @@ class PaymentDetail(APIView):
             })
 
 class BookingVehicle(APIView):
-    def get(self,request):
-        try:
-            book_all=Booking.objects.all()
-            serializer=BookingSerialiser(book_all,many=True)
-            return Response(serializer.data,status=status.HTTP_200_OK)
-        except Exception as e:
-            print(e)
+   
     def post(self,request):
         try:
             data=request.data
@@ -83,7 +77,15 @@ class BookingVehicle(APIView):
                 return Response({'error':serialiser.errors,'Message':'Invalid data'})
         except Exception as e:
             print(e)
-            return Response({'error':serialiser.errors,'Message':'Something went wrong'})
+            return Response({'Status':'Failure',
+            'Message':'Something went wrong'})
+    def get(self,request):
+        try:
+            book_all=Booking.objects.all()
+            serializer=BookingSerialiser(book_all,many=True)
+            return Response(serializer.data,status=status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
     
     def patch(self,request):
         try:
