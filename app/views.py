@@ -45,6 +45,38 @@ class Register(APIView):
                 'Error':'Something went wrong'
             })
 
+    def patch(self,request):
+        try:
+            data=request.data
+            mobile_number=request.GET.get('mobile_number')
+            obj=Registration.objects.filter(mobile_number=mobile_number).first()
+            if obj is not None:
+                serializer=RegistrationSerialiser(obj,data=data,partial=True)
+                if serializer.is_valid():
+                    serializer.save()
+                    return Response({
+                        'status':'Success',
+                        'message':'Data has been save successfully',
+                        'data':serializer.data
+                    })
+                else:
+                        return Response({
+                        'status':'Failure',
+                        'message':'Invalid data',
+                        'data':serializer.errors
+                    })
+            else:
+                return Response({
+                    'status':'Failure',
+                    'message':'Mobile number not found'
+                })
+        except Exception as e:
+            print(e)
+            return Response({
+                'status':'Failure',
+                'message':'Something went wrong'
+            })
+
 
 class Login(APIView):
     def post(self,request):
