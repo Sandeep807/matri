@@ -1,4 +1,6 @@
 from django.contrib import admin
+admin.site.site_header = "Karthavyabharath"
+admin.site.index_title = "Welcome to Karthavyabharath Site"
 
 # Register your models here.
 from app.models import *

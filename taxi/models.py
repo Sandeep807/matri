@@ -16,7 +16,6 @@ class DriverRegistration(Registration):
     pan_card=models.CharField(max_length=20)
     profile_image=models.ImageField(upload_to="driver",null=True,blank=True)
 
-
 class Booking(BaseModel):
 
     """To store booking details"""
@@ -34,6 +33,7 @@ class Booking(BaseModel):
     booking_time=models.TimeField()
     type_vehicle=models.CharField(max_length=100,choices=vehicle)
     is_cancel=models.BooleanField(default=False)
+    driver=models.OneToOneField(DriverRegistration,on_delete=models.CASCADE,null=True,blank=True)
 
 class Payment(BaseModel):
     book=models.ForeignKey(Booking,on_delete=models.CASCADE)

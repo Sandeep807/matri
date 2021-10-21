@@ -11,3 +11,8 @@ class BookingAdmin(admin.ModelAdmin):
 class PaymentAdmin(admin.ModelAdmin):
     list_display=('book','registration','is_paid','oder_id')
 
+@admin.register(DriverRegistration)
+class DriverRegistrationAdmin(admin.ModelAdmin):
+    list_display=('id','first_name','last_name','email','mobile_number','password',
+                'gender','licence','aadhar_card','pan_card','profile_image')
+
