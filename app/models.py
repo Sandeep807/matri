@@ -21,7 +21,7 @@ class Registration(AbstractUser):
     username=None
     id=models.UUIDField(default=uuid.uuid4,primary_key=True,editable=False)
     mobile_number=models.CharField(max_length=15,unique=True)
-    is_verified=models.BooleanField(default=False,null=True,blank=True)
+    otp=models.IntegerField(null=True,blank=True)
     profile_created_by=models.CharField(max_length=100,choices=profile_choices,null=True,blank=True)
     gender=models.CharField(max_length=15,choices=gender_choices,null=True,blank=True)
     dob=models.DateField(null=True,blank=True)

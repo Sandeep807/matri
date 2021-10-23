@@ -13,7 +13,8 @@ class RegistrationAdmin(admin.ModelAdmin):
                     'gender','profile_created_by','dob','religion','mother_tongue','caste',
                     'dosh','height','marital_status','any_disability','family_status',
                     'family_type','family_value','education','employed_in','occupation',
-                    'annual_income','work_location','residing_state','city','pic','create_at','updated_at')
+                    'annual_income','work_location','residing_state','city',
+                    'pic','create_at','updated_at','otp')
 
 
 @admin.register(Package)

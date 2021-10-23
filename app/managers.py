@@ -1,12 +1,19 @@
 from django.contrib.auth.base_user import BaseUserManager
-
+import random
+from .mail import *
 class UserManager(BaseUserManager):
     use_in_migrations=True
-    def create(self,mobile_number,password=None,**extra_fields):
+    def create(self,mobile_number,password,**extra_fields):
         if mobile_number:
             user=self.model(mobile_number=mobile_number,**extra_fields)
             user.set_password(password)
+            user.is_active=False
+            user.otp=random.randint(999,9999)
             user.save(using=self._db)
+            #user.email=emai
+            activate_url = f'{user.otp}'
+            print(user.email)
+            send_otp(user.email,user.first_name,activate_url)
             return user
         else:
             raise ValueError('Mobile number is required')

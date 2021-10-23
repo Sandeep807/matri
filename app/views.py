@@ -1,9 +1,5 @@
-
-
 # Create your views here.
 from django.shortcuts import render
-
-# Create your views here.
 from .serialiser import *
 from rest_framework.views import APIView
 from rest_framework import status
@@ -12,7 +8,6 @@ from rest_framework.response import Response
 from django.contrib.auth import authenticate, logout
 # from rest_framework_simplejwt.authentication import JWTAuthentication
 # from rest_framework_simplejwt.tokens import RefreshToken 
-
 from rest_framework.authtoken.models import Token
 from rest_framework.authentication import SessionAuthentication,BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -77,7 +72,6 @@ class Register(APIView):
                 'message':'Something went wrong'
             })
 
-
 class Login(APIView):
     def post(self,request):
         try:
@@ -139,7 +133,6 @@ class LogOut(APIView):
             return Response({
                 'message':'Something went wrong'
              })
-
 
 class ChangePassword(APIView):
     def post(self,request):
@@ -249,10 +242,12 @@ class VerifyOtp(APIView):
     def post(self,request):
         try:
             mobile_number=request.GET.get('mobile_number')
+            print(mobile_number)
             data=request.data
             serializer=ValidatorSerializer(data=data)
             if serializer.is_valid():
                 obj=Registration.objects.filter(mobile_number=mobile_number).first()
+                print(obj.otp)
                 if obj is not None:
                     if serializer.data['otp']==obj.otp:
                         return Response({

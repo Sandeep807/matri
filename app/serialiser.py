@@ -5,13 +5,15 @@ from .mail import *
 import random
 
 class RegistrationSerialiser(serializers.ModelSerializer):
+    """This serializer is showing all information for user"""
+
     first_name=serializers.CharField(required=True)
     last_name=serializers.CharField(required=True)
     email=serializers.EmailField(required=True)
     class Meta:
         model=Registration
         fields=['id','profile_created_by','password','first_name',
-        'last_name','email','mobile_number','is_verified','gender',
+        'last_name','email','mobile_number','gender',
         'dob','religion','mother_tongue','caste','dosh','height','family_value',
         'marital_status','any_disability','family_status','family_type',
         'education','employed_in','occupation','annual_income',
@@ -37,20 +39,20 @@ class PasswordSerialiser(serializers.Serializer):
     old_password=serializers.CharField()
 
 class ValidatorSerializer(serializers.Serializer):
-    otp=serializers.CharField(required=True)
+    otp=serializers.IntegerField(required=True)
 
-class SendOtpSerializer(serializers.ModelSerializer):
-    mobilenumber=serializers.CharField(required=True)
-    class Meta:
-        fileds=['mobile_number']
-        def update(self , instance , validated_data):
-            instance.mobile_number = validated_data['mobile_number']
-            otp=random.randint(999,9999)
-            instance.otp = otp
-            instance.save()
-            activate_url = f'{otp}'
-            send_otp(instance.email,instance.first_name,activate_url)
-            return instance
+# class SendOtpSerializer(serializers.ModelSerializer):
+#     mobilenumber=serializers.CharField(required=True)
+#     class Meta:
+#         fileds=['mobile_number']
+#         def update(self , instance , validated_data):
+#             instance.mobile_number = validated_data['mobile_number']
+#             otp=random.randint(999,9999)
+#             instance.otp = otp
+#             instance.save()
+#             activate_url = f'{otp}'
+#             send_otp(instance.email,instance.first_name,activate_url)
+#             return instance
 
 
 # class BasicDetailsSerialiser(serializers.ModelSerializer):
