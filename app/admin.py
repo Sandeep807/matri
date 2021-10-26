@@ -1,12 +1,10 @@
 from django.contrib import admin
 admin.site.site_header = "Karthavyabharath"
 admin.site.index_title = "Welcome to Karthavyabharath Site"
-
+from .models import *
 # Register your models here.
-from app.models import *
 # from taxi.models import *
 # Register your models here.
-# admin.site.register(Registration)
 @admin.register(Registration)
 class RegistrationAdmin(admin.ModelAdmin):
     list_display = ('id','first_name','last_name','mobile_number','email','password',

@@ -9,10 +9,19 @@ class DriverRegistrationSerialiser(serializers.ModelSerializer):
         fields=['first_name','last_name','email',
         'mobile_number','password','gender','licence','aadhar_card','pan_card','profile_image']
 
+
 class BookingSerialiser(serializers.ModelSerializer):
     class Meta:
         model=Booking
-        exclude=('create_at','updated_at')
+        exclude=['create_at','updated_at']
+
+class DriverRegistrationSerialiser1(serializers.ModelSerializer):
+    bookings=BookingSerialiser(read_only=True,many=True)
+    class Meta:
+        model=DriverRegistration
+        fields=['first_name','last_name','email',
+        'mobile_number','password','gender','licence',
+        'aadhar_card','pan_card','profile_image','bookings']
 
 class PaymentSerialiser(serializers.ModelSerializer):
     class Meta:
@@ -27,3 +36,7 @@ class PasswordSerialiser(serializers.Serializer):
     old_password=serializers.CharField()
     new_password=serializers.CharField()
     confirm_password=serializers.CharField()
+
+
+    
+

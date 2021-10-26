@@ -1,8 +1,4 @@
 from django.db import models
-
-# Create your models here.
-from django.db import models
-
 # Create your models here.
 from django.contrib.auth.models import AbstractUser
 from .managers import *
@@ -13,6 +9,8 @@ class BaseModel(models.Model):
     id=models.UUIDField(default=uuid.uuid4,primary_key=True,editable=False)
     create_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now=True)
+    class Meta:
+        abstract=True
 
 class Registration(AbstractUser):
 

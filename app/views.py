@@ -250,6 +250,8 @@ class VerifyOtp(APIView):
                 print(obj.otp)
                 if obj is not None:
                     if serializer.data['otp']==obj.otp:
+                        obj.is_active=True
+                        obj.save()
                         return Response({
                             'status':'Success',
                             'Details':'Otp verify successfully'
@@ -271,6 +273,10 @@ class VerifyOtp(APIView):
                 })
         except Exception as e:
             print(e)
+            import sys, os
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print(exc_type, fname, exc_tb.tb_lineno)
             return Response({
                 'status':'Failure',
                 'Error':'Something went wrong'
@@ -280,25 +286,70 @@ class PackageView(APIView):
     def post(self,request):
         try:
             data=request.data
-            serializer=PackageSerialiser(data=data)
+            #mobilenumber=request.GET.get('mobilenumber')
+            print(data)
+            serializer=PackageSerializer(data=data)
+            print("ser",serializer.is_valid())
             if serializer.is_valid():
                 serializer.save()
                 return Response({
                     'status':'Success',
-                    'Details':serializer.data
+                    'details':serializer.data
                 })
-            else:
-                return Response({
-                    'status':'Failure',
-                    'Details':'Invalid data'
-                })
-        except Exception as e:
-            print(e)
             return Response({
                 'status':'Failure',
-                'Error':'Something went wrong'
+                'details':serializer.errors
+            })
+        except Exception as e:
+            print("eeror",e)
+            return Response({
+                'status':"error",
+                'details':'somthing went wrong'
             })
 
+
+class PaymentView(APIView):
+    def post(self,request):
+        try:
+            data=request.data
+            print(data)
+            serializer=PaymentSerializer(data=data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({
+                    'status':"Success",
+                    'details':serializer.data
+                })
+            return Response({
+                    'status':"False",
+                    'details':serializer.errors
+                })
+        except Exception as e:
+            print("shiv",e)
+            return Response({
+                    'status':"error",
+                    'details':"somthing went wrong"
+                })
+
+    def get(self,request):
+        try:
+            uid=request.GET.get('uid')
+            print(uid)
+            if uid is not None:
+                obj=PaymentDetails.objects.get(register__mobilenumber=uid)
+                if obj is not  None:
+                    serializer=PaymentSerializer(obj)
+                    return Response({
+                    'status':"Success",
+                    'details':serializer.data
+                    })
+                else:
+                    return Response({
+                    'status':"Failure",
+                    'details':"not found"
+                    })
+        except Exception as e:
+            print(e)
 
 
 # class BasicDetail(viewsets.ModelViewSet):

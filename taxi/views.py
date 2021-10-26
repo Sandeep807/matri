@@ -9,6 +9,8 @@ from rest_framework.authtoken.models import Token
 from rest_framework import status
 from rest_framework.authentication import SessionAuthentication,BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
+from app.serialiser import ValidatorSerializer
+import sys, os
 # Create your views here.
 
 class DriverRegister(APIView):
@@ -35,6 +37,37 @@ class DriverRegister(APIView):
                 'status':'Failure',
                 'Error':'Something went wrong'
             })
+
+    # def get(self,request):
+    #     try:
+    #         data=request.GET.get('mobile_number')
+    #         obj=DriverRegistration.objects.filter(mobile_number=data).first()
+    #         serializer=DriverLoginSerialiser(obj)
+    #         return Response({
+    #             'status':'Success',
+    #             'Data':serializer.data
+    #         })
+    #     except Exception as e:
+    #         print(e)
+    def get(self,request):
+        try:
+            driver=request.GET.get('mobile_number')
+            print('this is ',driver)
+            if driver is not None:
+                book_all=DriverRegistration.objects.filter(mobile_number=driver)
+                print(book_all)
+                serializer=DriverRegistrationSerialiser1(book_all,many=True)
+                return Response(serializer.data,status=status.HTTP_200_OK)
+            else:
+                return Response({
+                    'status':'Failure',
+                    'Message':'Mobile number not found'
+                })
+        except Exception as e:
+            print(e)
+    
+
+    
 
 # class BookVehicle(viewsets.ModelViewSet):
 #     queryset=Booking.objects.all()
@@ -65,6 +98,27 @@ class PaymentDetail(APIView):
                 'Message':'Something went wrong'
             })
 
+    def patch(self,request):
+
+        try:
+            id=request.GET.get('id')
+            check=Payment.objects.filter(id=id).first()
+            if check:
+                check.is_paid=True
+                check.save()
+                return Response({
+                    'status':'Success',
+                    'Message':'Payment successful'
+                })
+            else:
+                return Response({
+                    'status':'Failure',
+                    'Message':'Id not found'
+                })
+        except Exception as e:
+            print(e)
+    
+
 class BookingVehicle(APIView):
    
     def post(self,request):
@@ -72,6 +126,7 @@ class BookingVehicle(APIView):
             data=request.data
             serialiser=BookingSerialiser(data=data)
             if serialiser.is_valid():
+                serialiser.save()
                 return Response(serialiser.data,status=status.HTTP_200_OK)
             else:
                 return Response({'error':serialiser.errors,'Message':'Invalid data'})
@@ -79,13 +134,6 @@ class BookingVehicle(APIView):
             print(e)
             return Response({'Status':'Failure',
             'Message':'Something went wrong'})
-    def get(self,request):
-        try:
-            book_all=Booking.objects.all()
-            serializer=BookingSerialiser(book_all,many=True)
-            return Response(serializer.data,status=status.HTTP_200_OK)
-        except Exception as e:
-            print(e)
     
     def patch(self,request):
         try:
@@ -118,7 +166,7 @@ class Login(APIView):
                             'data':{}
                         }
                     )
-                user_obj, = authenticate(mobile_number=mobile_number,password=password)
+                user_obj= authenticate(mobile_number=mobile_number,password=password)
                 print(user_obj)
 
                 if user_obj is None:
@@ -137,11 +185,13 @@ class Login(APIView):
                 })
         except Exception as e:
             print(e)
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print(exc_type, fname, exc_tb.tb_lineno)
             return Response({
                 'status':False,
                 'message':'Something went wrong'
             })
-
 class ChangePassword(APIView):
     def post(self,request):
         try:

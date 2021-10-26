@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'lxn##8_m%5zw&ezjy=3-t^+&+h1en6aiu^6_&(n$dg7*&rts_6'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -125,6 +125,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'static'
+MEDIA_URL='/media/'
+MEDIA_ROOT=BASE_DIR/'media/'
 
 AUTH_USER_MODEL='app.Registration'
 #karthavyabharatapp@gmail.com
