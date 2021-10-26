@@ -12,7 +12,7 @@ class UserManager(BaseUserManager):
                 user.save()
                 return user
             elif user.type=='Driver':
-                user.is_active
+                user.is_active=True
                 # user.set_password(password)
                 user.save()
                 return user
