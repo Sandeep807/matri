@@ -29,10 +29,7 @@ class Register(APIView):
                     'Details':serializer.data
                 })
             else:
-                return Response({
-                    'status':'Failure',
-                    'Details':serializer.errors
-                })
+                return Response(data=serializer.errors,status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             print(e)
             return Response({
@@ -62,9 +59,8 @@ class Register(APIView):
                     })
             else:
                 return Response({
-                    'status':'Failure',
                     'message':'Mobile number not found'
-                })
+                },status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             print(e)
             return Response({
@@ -84,11 +80,8 @@ class Login(APIView):
                 if not register:
                     return Response(
                         {
-                            'status':False,
-                            'message':'user not found',
-                            'data':{}
-                        }
-                    )
+                            'message':'user not found'
+                        },status=status.HTTP_404_NOT_FOUND)
                 user_obj = authenticate(mobile_number=mobile_number,password=password)
                 if user_obj is None:
                     return Response({
@@ -169,9 +162,8 @@ class ChangePassword(APIView):
                                 'details':'new password and confirm passwrod missmatch'  
                                 })
                 return Response({
-                    'status':'False',
                     'details':'mobile number is not found'
-                    })
+                    },status=status.HTTP_404_NOT_FOUND)
             return Response({
                 'status':False,
                 "Error":serialise.errors
@@ -204,9 +196,8 @@ class FindPersonAccordinToGender(APIView):
                     })
             else:
                 return Response({
-                    'status':'Failure',
                     'Error':'Mobile number not found'
-                })
+                },status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             print(e)
             return Response({
@@ -227,9 +218,8 @@ class GetFullInfo(APIView):
                 })
             else:
                 return Response({
-                'status':'Failure',
                 'Error':'Mobile number not found'
-                })
+                },status=status.HTTP_404_NOT_FOUND)
 
         except Exception as e:
             print(e)
@@ -263,9 +253,8 @@ class VerifyOtp(APIView):
                         })
                 else:
                     return Response({
-                        'status':'Failure',
                         'Details':'Mobile number not found'
-                    })
+                    },status=status.HTTP_404_NOT_FOUND)
             else:
                 return Response({
                     'status':'Failure',
@@ -278,9 +267,8 @@ class VerifyOtp(APIView):
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             print(exc_type, fname, exc_tb.tb_lineno)
             return Response({
-                'status':'Failure',
                 'Error':'Something went wrong'
-            })
+            },status=status.HTTP_404_NOT_FOUND)
 
 class PackageView(APIView):
     def post(self,request):
@@ -297,9 +285,8 @@ class PackageView(APIView):
                     'details':serializer.data
                 })
             return Response({
-                'status':'Failure',
                 'details':serializer.errors
-            })
+            },status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             print("eeror",e)
             return Response({

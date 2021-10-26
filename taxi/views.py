@@ -34,9 +34,8 @@ class DriverRegister(APIView):
         except Exception as e:
             print(e)
             return Response({
-                'status':'Failure',
                 'Error':'Something went wrong'
-            })
+            },status=status.HTTP_404_NOT_FOUND)
 
     # def get(self,request):
     #     try:
@@ -60,9 +59,8 @@ class DriverRegister(APIView):
                 return Response(serializer.data,status=status.HTTP_200_OK)
             else:
                 return Response({
-                    'status':'Failure',
                     'Message':'Mobile number not found'
-                })
+                },status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             print(e)
     

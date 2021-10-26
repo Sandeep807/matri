@@ -11,11 +11,6 @@ class UserManager(BaseUserManager):
                 user.is_active
                 user.save()
                 return user
-            elif user.type=='Driver':
-                user.is_active=True
-                # user.set_password(password)
-                user.save()
-                return user
             else:
                 user.is_active=False
                 user.otp=random.randint(999,9999)
@@ -24,7 +19,7 @@ class UserManager(BaseUserManager):
                 #     user.is_active=True
                 #     user.save()
                 #     return user
-                #user.email=emai
+                #user.email=email
                 activate_url = f'{user.otp}'
                 print(user.email)
                 send_otp(user.email,user.first_name,activate_url)
