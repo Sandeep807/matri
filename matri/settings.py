@@ -25,7 +25,7 @@ SECRET_KEY = 'lxn##8_m%5zw&ezjy=3-t^+&+h1en6aiu^6_&(n$dg7*&rts_6'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -126,7 +126,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'static'
 MEDIA_URL='/media/'
-MEDIA_ROOT=BASE_DIR/'media/'
+MEDIA_ROOT=BASE_DIR / 'media/'
 
 AUTH_USER_MODEL='app.Registration'
 #karthavyabharatapp@gmail.com
@@ -139,3 +139,10 @@ EMAIL_HOST_PASSWORD ='qleowxqlboamtqxu'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ]
+}

@@ -15,7 +15,7 @@ class BaseModel(models.Model):
 class Registration(AbstractUser):
 
     """To store user details"""
-    gender_choices=(('Select Options','Select Options'),('Male','Male'),('Female','Female'))
+    gender_choices=(('Male','Male'),('Female','Female'))
     username=None
     id=models.UUIDField(default=uuid.uuid4,primary_key=True,editable=False)
     mobile_number=models.CharField(max_length=15,unique=True)
@@ -53,19 +53,20 @@ class Package(BaseModel):
 
     """To store package details"""
 
-    mem_choices=(('Select Options','Select Options'),('Silver','Silver'),('Gold','Gold'),('Diamond','Diamond'))
-    amount=models.IntegerField()
+    mem_choices=(('Silver','Silver'),('Gold','Gold'),('Diamond','Diamond'))
+    subscription_amount=models.IntegerField(max_length=100)
     membership=models.CharField(max_length=100,choices=mem_choices)
+    expire_pack=models.DateField(null=True,blank=True)
+    registeruser=models.OneToOneField(Registration,related_name='packs',on_delete=models.CASCADE)
 
 class PaymentDetails(BaseModel):
 
     """To store payment details"""
-    transaction_id=models.CharField(max_length=100,null=True,blank=True)
-    order_id=models.CharField(max_length=100,null=True,blank=True)
-    payment_signature=models.CharField(max_length=100,null=True,blank=True)
+    tranc_id=models.CharField(max_length=100,null=True,blank=True)
+    payment_mode=models.CharField(max_length=100,null=True,blank=True)
     is_paid=models.BooleanField(default=False)
-    register=models.ForeignKey(Registration,on_delete=models.CASCADE)
-    pack=models.ForeignKey(Package,null=True,blank=True,on_delete=models.CASCADE)
+    register=models.ForeignKey(Registration,related_name='payment',on_delete=models.CASCADE)
+    pack=models.ForeignKey(Package,null=True,related_name='payment',blank=True,on_delete=models.CASCADE)
 
 
 

@@ -3,8 +3,6 @@ admin.site.site_header = "Karthavyabharath"
 admin.site.index_title = "Welcome to Karthavyabharath Site"
 from .models import *
 # Register your models here.
-# from taxi.models import *
-# Register your models here.
 @admin.register(Registration)
 class RegistrationAdmin(admin.ModelAdmin):
     list_display = ('id','first_name','last_name','mobile_number','email','password',
@@ -17,9 +15,9 @@ class RegistrationAdmin(admin.ModelAdmin):
 
 @admin.register(Package)
 class PackageAdmin(admin.ModelAdmin):
-    list_display=('amount','membership')
+    list_display=('subscription_amount','membership','expire_pack')
 
 @admin.register(PaymentDetails)
 class PaymentDetailsAdmin(admin.ModelAdmin):
-    list_display=('transaction_id','order_id','payment_signature','is_paid','register','pack')
+    list_display=('tranc_id','payment_mode','is_paid')
 

@@ -3,9 +3,9 @@ from .models import *
 from rest_framework import serializers
 from .mail import *
 import random
-# from dateutil.relativedelta import relativedelta
-from datetime import date, datetime, timedelta
-class RegistrationSerialiser(serializers.ModelSerializer):
+from dateutil.relativedelta import *
+from datetime import date
+class RegistrationSerializer(serializers.ModelSerializer):
     """This serializer is showing all information for user"""
 
     first_name=serializers.CharField(required=True)
@@ -28,38 +28,42 @@ class RegistrationSerialiser(serializers.ModelSerializer):
 class PackageSerializer(serializers.ModelSerializer):
     class Meta:
         model=Package
-        fields='_all_'
+        fields='__all__'
     def create(self,validated_data):
-        #print(validated_data)
-        data=Registration.objects.filter(mobilenumber=validated_data['registeruser']).first()
-        print("registeruser",data.uid)
-        m=None
-        if "silver" in validated_data:
-            m = date.today() + datetime(months=+3)
-        elif "gold" in validated_data:
-            m = date.today() + datetime(months=+6)
+        #data=Registration.objects.filter(mobile_number=validated_data['registeruser']).first()
+        # use_date=None
+        if 'Silver' in validated_data['membership']:
+            print('silver')
+            use_date= date.today()
+            use_date = use_date+relativedelta(months=+3)
+            print(use_date)
+        elif 'Gold' == validated_data['membership']:
+            print('Gold')
+            use_date= date.today()
+            use_date = use_date+relativedelta(months=+6)
+            print(use_date)
         else:
-            m = date.today() + datetime(months=+12)
-        print("shiv",m)
+            print('Diamond')
+            use_date= date.today()
+            use_date = use_date+relativedelta(months=+12)
+        print("sandeep",use_date)
         
         obj=Package.objects.create(
-            subscribtion_amount=validated_data['subscribtion_amount'],
+            subscription_amount=validated_data['subscription_amount'],
             membership=validated_data['membership'],
-            registeruser=data,
-            expire_pack=m
+            registeruser=validated_data['registeruser'],
+            expire_pack=use_date
             ) 
-        
-        #print(obj)
         return obj
 class PaymentSerializer(serializers.ModelSerializer):
-    register=RegistrationSerialiser( read_only=True)
-    pack=PackageSerializer(read_only=True)
+    # register=RegistrationSerialiser( read_only=True)
+    # pack=PackageSerializer(read_only=True)
     
     class Meta:
         model=PaymentDetails
-        fields=['payment_mode','tranc_id','register','pack','is_verify']
-        read_only_fields=['register','pack']
-        dept=1
+        fields=['payment_mode','tranc_id','register','pack','is_paid']
+        # read_only_fields=['register','pack']
+        # dept=1
 
 class LoginSerialiser(serializers.Serializer):
     mobile_number=serializers.CharField()

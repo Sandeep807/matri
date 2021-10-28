@@ -9,7 +9,7 @@ from django.contrib.auth import authenticate, logout
 # from rest_framework_simplejwt.authentication import JWTAuthentication
 # from rest_framework_simplejwt.tokens import RefreshToken 
 from rest_framework.authtoken.models import Token
-from rest_framework.authentication import SessionAuthentication,BasicAuthentication
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 # Create your views here.
 
@@ -18,10 +18,11 @@ class Register(APIView):
     # permission_classes=[IsAuthenticated]
     # queryset=Registration.objects.all()
     # serializer_class=RegistrationSerialiser
+    
     def post(self,request):
         try:
             data=request.data
-            serializer=RegistrationSerialiser(data=data)
+            serializer=RegistrationSerializer(data=data)
             if serializer.is_valid():
                 serializer.save()
                 return Response({
@@ -43,7 +44,7 @@ class Register(APIView):
             mobile_number=request.GET.get('mobile_number')
             obj=Registration.objects.filter(mobile_number=mobile_number).first()
             if obj is not None:
-                serializer=RegistrationSerialiser(obj,data=data,partial=True)
+                serializer=RegistrationSerializer(obj,data=data,partial=True)
                 if serializer.is_valid():
                     serializer.save()
                     return Response({
@@ -98,10 +99,10 @@ class Login(APIView):
                     }
                 })
         except Exception as e:
-            # import sys, os
-            # exc_type, exc_obj, exc_tb = sys.exc_info()
-            # fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            # print(exc_type, fname, exc_tb.tb_lineno)
+            import sys, os
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print(exc_type, fname, exc_tb.tb_lineno)
             print(e)
             return Response({
                 'status':False,
@@ -173,45 +174,122 @@ class ChangePassword(APIView):
             print(e)
             return Response({'status':404,'message':'Something went wrong'})
 
-class FindPersonAccordinToGender(APIView):
+class FindFiveView(APIView):
+    authentication_classes=[TokenAuthentication]
+    permission_classes=[IsAuthenticated]
     def get(self,request):
         try:
-            mobile_number=request.GET.get("mobile_number")
-            data=Registration.objects.filter(mobile_number=mobile_number).first()
-            if data is not None:
-                gender=data.gender
-                if gender=='Male':
-                    female=Registration.objects.filter(gender='Female')[:5]
-                    serializer=RegistrationSerialiser(female,many=True)
-                    return Response({
-                        'status':'Success',
-                        'details':serializer.data
-                    })
-                else:
-                    male=Registration.objects.filter(gender='Male')[:5]
-                    serializer=RegistrationSerialiser(male,many=True)
-                    return Response({
-                        'status':'Success',
-                        'details':serializer.data
-                    })
+            mobile_number=request.GET.get('mobile_number')
+            print("mobile_number",mobile_number)
+            obj=PaymentDetails.objects.filter(register__mobile_number=mobile_number).first()
+            if obj is None:  
+                print("package")
+                data=Registration.objects.filter(mobile_number=mobile_number).first()
+                print(type(data))
+                if data is not None:
+                    print(data)
+                    gender=data.gender
+                    if gender=='Male':
+                        obj=Registration.objects.filter(gender='Female')[:5]
+                        serializer=RegistrationSerializer(obj,many=True)
+                        return Response({
+                            'status':"Success",
+                            'details':serializer.data
+                        })
+                    else:
+                        obj=Registration.objects.filter(gender='Male')[:5]
+                        serializer=RegistrationSerializer(obj,many=True)
+                        return Response({
+                            'status':"Success",
+                            'details':serializer.data
+                        })
+            r=obj.register
+            gender=r.gender
+            print(gender)
+            packobj=obj.pack
+            membership=packobj.membership
+            expiredate=packobj.expire_pack
+            print(expiredate)
+            if expiredate<=date.today():
+                
+                    gender=data.gender
+                    if gender=='Male':
+                        obj=Registration.objects.filter(gender='Female')[:5]
+                        serializer=RegistrationSerializer(obj,many=True)
+                        return Response({
+                            'status':"Success",
+                            'details':serializer.data
+                        })
+                    else:
+                        obj=Registration.objects.filter(gender='Male')[:5]
+                        serializer=RegistrationSerializer(obj,many=True)
+                        return Response({
+                            'status':"Success",
+                            'details':serializer.data})
             else:
-                return Response({
-                    'Error':'Mobile number not found'
-                },status=status.HTTP_404_NOT_FOUND)
+                if membership=='Gold':
+                    if gender=='Male':
+                        obj=Registration.objects.filter(gender='Female')[:30]
+                        serializer=RegistrationSerializer(obj,many=True)
+                        return Response({
+                                    
+                                    'details':serializer.data,
+
+                                        },status=status.HTTP_200_OK)
+                    else:
+                        obj=Registration.objects.filter(gender='Male')[:30]
+                        serializer=RegistrationSerializer(obj,many=True)
+                        return Response({
+                            
+                            'details':serializer.data
+                            },status=status.HTTP_200_OK)
+                elif membership=='Silver':
+                    if gender=='Male':
+                        obj=Registration.objects.filter(gender='Female')[:60]
+                        serializer=RegistrationSerializer(obj,many=True)
+                        return Response({
+                                    
+                                    'details':serializer.data,
+
+                                        },status=status.HTTP_200_OK)
+                    else:
+                        obj=Registration.objects.filter(gender='Male')[:60]
+                        serializer=RegistrationSerializer(obj,many=True)
+                        return Response({
+                            
+                            'details':serializer.data
+                            },status=status.HTTP_200_OK)
+                else:
+                    if gender=='Male':
+                        obj=Registration.objects.filter(gender='Female')[:100]
+                        serializer=RegistrationSerializer(obj,many=True)
+                        return Response({
+                                    
+                                    'details':serializer.data,
+
+                                        },status=status.HTTP_200_OK)
+                    else:
+                        obj=Registration.objects.filter(gender='Male')[:100]
+                        serializer=RegistrationSerializer(obj,many=True)
+                        return Response({
+                            
+                            'details':serializer.data
+                            },status=status.HTTP_200_OK)
         except Exception as e:
-            print(e)
+            print('error',e)
             return Response({
-                'status':False,
-                'Error':'Something went wrong'
-            })
+                'details':'something went wrong'
+            },status=status.HTTP_400_BAD_REQUEST)
 
 class GetFullInfo(APIView):
+    authentication_classes=[TokenAuthentication]
+    permission_classes=[IsAuthenticated]
     def get(self,request):
         try:
             mobile_number=request.GET.get('mobile_number')
             data=Registration.objects.filter(mobile_number=mobile_number).first()
             if data is not None:
-                serializer=RegistrationSerialiser(data)
+                serializer=RegistrationSerializer(data)
                 return Response({
                     'status':'Success',
                     'Details':serializer.data
@@ -224,9 +302,8 @@ class GetFullInfo(APIView):
         except Exception as e:
             print(e)
             return Response({
-                'status':'Failure',
                 'Error':'Something went wrong'
-            })
+            },status=status.HTTP_400_BAD_REQUEST)
 
 class VerifyOtp(APIView):
     def post(self,request):
@@ -248,18 +325,16 @@ class VerifyOtp(APIView):
                         })
                     else:
                         return Response({
-                            'status':'Failure',
                             'Details':'Otp not match'
-                        })
+                        },status=status.HTTP_406_NOT_ACCEPTABLE)
                 else:
                     return Response({
                         'Details':'Mobile number not found'
                     },status=status.HTTP_404_NOT_FOUND)
             else:
                 return Response({
-                    'status':'Failure',
                     'Error':serializer.errors
-                })
+                },status=status.HTTP_406_NOT_ACCEPTABLE)
         except Exception as e:
             print(e)
             import sys, os
@@ -268,7 +343,7 @@ class VerifyOtp(APIView):
             print(exc_type, fname, exc_tb.tb_lineno)
             return Response({
                 'Error':'Something went wrong'
-            },status=status.HTTP_404_NOT_FOUND)
+            },status=status.HTTP_400_BAD_REQUEST)
 
 class PackageView(APIView):
     def post(self,request):
@@ -277,7 +352,7 @@ class PackageView(APIView):
             #mobilenumber=request.GET.get('mobilenumber')
             print(data)
             serializer=PackageSerializer(data=data)
-            print("ser",serializer.is_valid())
+            print("ser",serializer)
             if serializer.is_valid():
                 serializer.save()
                 return Response({
@@ -286,16 +361,21 @@ class PackageView(APIView):
                 })
             return Response({
                 'details':serializer.errors
-            },status=status.HTTP_404_NOT_FOUND)
+            },status=status.HTTP_406_NOT_ACCEPTABLE)
         except Exception as e:
+            import sys, os
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print(exc_type, fname, exc_tb.tb_lineno)
             print("eeror",e)
             return Response({
-                'status':"error",
                 'details':'somthing went wrong'
-            })
+            },status=status.HTTP_400_BAD_REQUEST)
 
 
 class PaymentView(APIView):
+    authentication_classes=[TokenAuthentication]
+    permission_classes=[IsAuthenticated]
     def post(self,request):
         try:
             data=request.data
@@ -308,35 +388,18 @@ class PaymentView(APIView):
                     'details':serializer.data
                 })
             return Response({
-                    'status':"False",
                     'details':serializer.errors
-                })
+                },status=status.HTTP_406_NOT_ACCEPTABLE)
         except Exception as e:
+            import sys, os
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             print("shiv",e)
             return Response({
-                    'status':"error",
                     'details':"somthing went wrong"
-                })
+                },status=status.HTTP_400_BAD_REQUEST)
 
-    def get(self,request):
-        try:
-            uid=request.GET.get('uid')
-            print(uid)
-            if uid is not None:
-                obj=PaymentDetails.objects.get(register__mobilenumber=uid)
-                if obj is not  None:
-                    serializer=PaymentSerializer(obj)
-                    return Response({
-                    'status':"Success",
-                    'details':serializer.data
-                    })
-                else:
-                    return Response({
-                    'status':"Failure",
-                    'details':"not found"
-                    })
-        except Exception as e:
-            print(e)
+
 
 
 # class BasicDetail(viewsets.ModelViewSet):
