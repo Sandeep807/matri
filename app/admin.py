@@ -13,6 +13,8 @@ class RegistrationAdmin(admin.ModelAdmin):
                     'family_type','family_value','education','employed_in','occupation',
                     'annual_income','work_location','residing_state','city',
                     'image_customer','create_at','updated_at','otp')
+    search_fields=['mobile_number']
+    list_per_page=10
     def image_customer(self,obj):
         return format_html(f'<img src="/media/{obj.pic}" style=height:50px;width:50px>')
 
