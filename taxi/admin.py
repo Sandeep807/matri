@@ -5,6 +5,7 @@ from .models import *
 class DriverRegistrationAdmin(admin.ModelAdmin):
     list_display=['id','first_name','last_name','email','mobile_number','password',
                 'gender','licence','aadhar_card','pan_card','profile_image']
+                
 @admin.register(Booking)
 class BookingAdmin(admin.ModelAdmin):
     list_display = ['id','mobile_number','source_address','destination_address','booking_date'

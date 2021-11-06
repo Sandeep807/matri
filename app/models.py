@@ -12,12 +12,22 @@ class BaseModel(models.Model):
     class Meta:
         abstract=True
 
+def generate_id():
+    try:
+        obj=Registration.objects.all().last()
+        if obj is not None:
+            return (obj.id)+1
+        else:
+            return 1001
+    except Exception as e:
+        print(e)
+
 class Registration(AbstractUser):
 
     """To store user details"""
     gender_choices=(('Male','Male'),('Female','Female'))
     username=None
-    id=models.UUIDField(default=uuid.uuid4,primary_key=True,editable=False)
+    id=models.IntegerField(default=generate_id,primary_key=True,editable=False)
     mobile_number=models.CharField(max_length=15,unique=True)
     otp=models.IntegerField(null=True,blank=True)
     profile_created_by=models.CharField(max_length=100,choices=profile_choices,null=True,blank=True)
@@ -25,7 +35,8 @@ class Registration(AbstractUser):
     dob=models.DateField(null=True,blank=True)
     religion=models.CharField(max_length=200,choices=religion_choices,null=True,blank=True)
     mother_tongue=models.CharField(max_length=100,choices=tongue,null=True,blank=True)
-    caste=models.CharField(max_length=1000,choices=caste_choices,null=True,blank=True)
+    caste=models.CharField(max_length=1000,null=True,blank=True)
+    gotra=models.CharField(max_length=100,null=True,blank=True)
     dosh=models.CharField(max_length=100,choices=dosh_choices,null=True,blank=True)
     height=models.CharField(max_length=100,null=True,blank=True)
     marital_status=models.CharField(max_length=100,choices=status_choices,null=True,blank=True)
@@ -40,7 +51,7 @@ class Registration(AbstractUser):
     work_location=models.CharField(max_length=100,choices=work_choices,null=True,blank=True)
     residing_state=models.CharField(max_length=100,null=True,blank=True)
     city=models.CharField(max_length=100,null=True,blank=True)
-    pic=models.ImageField(upload_to='matri-image',null=True,blank=True)
+    pic=models.ImageField(upload_to='matri/image',null=True,blank=True)
     create_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now=True)
 
@@ -54,10 +65,10 @@ class Package(BaseModel):
     """To store package details"""
 
     mem_choices=(('Silver','Silver'),('Gold','Gold'),('Diamond','Diamond'))
-    subscription_amount=models.IntegerField(max_length=100)
+    subscription_amount=models.IntegerField()
     membership=models.CharField(max_length=100,choices=mem_choices)
     expire_pack=models.DateField(null=True,blank=True)
-    registeruser=models.OneToOneField(Registration,related_name='packs',on_delete=models.CASCADE)
+    registeruser=models.ForeignKey(Registration,related_name='packs',on_delete=models.CASCADE)
 
 class PaymentDetails(BaseModel):
 
@@ -66,46 +77,4 @@ class PaymentDetails(BaseModel):
     payment_mode=models.CharField(max_length=100,null=True,blank=True)
     is_paid=models.BooleanField(default=False)
     register=models.ForeignKey(Registration,related_name='payment',on_delete=models.CASCADE)
-    pack=models.ForeignKey(Package,null=True,related_name='payment',blank=True,on_delete=models.CASCADE)
-
-
-
-
-# class BasicDetails(models.Model):
-#     dob=models.DateField(null=True,blank=True)
-#     religion=models.CharField(max_length=200,choices=religion_choices)
-#     mother_tongue=models.CharField(max_length=100,choices=tongue)
-#     email=models.CharField(max_length=100)
-#     register=models.ForeignKey(Registration,on_delete=models.CASCADE)
-#     create_at=models.DateTimeField(auto_now_add=True)
-#     updated_at=models.DateTimeField(auto_now=True)
-
-# class CasteDetails(models.Model):
-#     caste=models.CharField(max_length=1000,choices=caste_choices)
-#     dosh=models.CharField(max_length=100,choices=dosh_choices)
-#     register=models.ForeignKey(Registration,on_delete=models.CASCADE)
-#     create_at=models.DateTimeField(auto_now_add=True)
-#     updated_at=models.DateTimeField(auto_now=True)
-
-# class PersonalDetails(models.Model):
-#     height=models.CharField(max_length=100)
-#     marital_status=models.CharField(max_length=100,choices=status_choices)
-#     any_disability=models.CharField(max_length=100,choices=disability_choices)
-#     family_status=models.CharField(max_length=100,choices=family_choices)
-#     family_type=models.CharField(max_length=100,choices=family_type_choices)
-#     family_value=models.CharField(max_length=100,choices=family_value_choices)
-#     register=models.ForeignKey(Registration,on_delete=models.CASCADE)
-
-# class ProfessionalDetails(models.Model):
-#     education=models.CharField(max_length=1000,choices=education_choices)
-#     employed_in=models.CharField(max_length=100,choices=employee_choices)
-#     occupation=models.CharField(max_length=100,choices=occupation_choices)
-#     annual_income=models.CharField(max_length=1000,choices=annual_income_choices)
-#     work_location=models.CharField(max_length=100,choices=work_choices)
-#     residing_state=models.CharField(max_length=100)
-#     city=models.CharField(max_length=100)
-#     register=models.ForeignKey(Registration,on_delete=models.CASCADE)
-
-# class Image(models.Model):
-#     pic=models.ImageField(upload_to='image',null=True,blank=True)
-#     register=models.OneToOneField(Registration,on_delete=models.CASCADE)
+    pack=models.ForeignKey(Package,related_name='payment',on_delete=models.CASCADE)
