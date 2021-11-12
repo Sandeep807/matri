@@ -3,14 +3,6 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from .managers import *
 from .Options import *
-import uuid
-
-class BaseModel(models.Model):
-    id=models.UUIDField(default=uuid.uuid4,primary_key=True,editable=False)
-    create_at=models.DateTimeField(auto_now_add=True)
-    updated_at=models.DateTimeField(auto_now=True)
-    class Meta:
-        abstract=True
 
 def generate_id():
     try:
@@ -37,6 +29,7 @@ class Registration(AbstractUser):
     mother_tongue=models.CharField(max_length=100,choices=tongue,null=True,blank=True)
     caste=models.CharField(max_length=1000,null=True,blank=True)
     gotra=models.CharField(max_length=100,null=True,blank=True)
+    peta=models.CharField(max_length=100,null=True,blank=True)
     dosh=models.CharField(max_length=100,choices=dosh_choices,null=True,blank=True)
     height=models.CharField(max_length=100,null=True,blank=True)
     marital_status=models.CharField(max_length=100,choices=status_choices,null=True,blank=True)
@@ -60,21 +53,46 @@ class Registration(AbstractUser):
     REQUIRED_FIELDS=[]
     objects=UserManager()
 
-class Package(BaseModel):
+def generate_id():
+    try:
+        obj=Package.objects.all().last()
+        if obj is not None:
+            return (obj.id)+1
+        else:
+            return 1001
+    except Exception as e:
+        print(e)
+
+class Package(models.Model):
 
     """To store package details"""
-
+    id=models.IntegerField(default=generate_id,primary_key=True,editable=False)
     mem_choices=(('Silver','Silver'),('Gold','Gold'),('Diamond','Diamond'))
     subscription_amount=models.IntegerField()
     membership=models.CharField(max_length=100,choices=mem_choices)
     expire_pack=models.DateField(null=True,blank=True)
     registeruser=models.ForeignKey(Registration,related_name='packs',on_delete=models.CASCADE)
+    create_at=models.DateTimeField(auto_now_add=True)
+    updated_at=models.DateTimeField(auto_now=True)
 
-class PaymentDetails(BaseModel):
+def generate_id():
+    try:
+        obj=PaymentDetails.objects.all().last()
+        if obj is not None:
+            return (obj.id)+1
+        else:
+            return 1001
+    except Exception as e:
+        print(e)
+
+class PaymentDetails(models.Model):
 
     """To store payment details"""
+    id=models.IntegerField(default=generate_id,primary_key=True,editable=True)
     tranc_id=models.CharField(max_length=100,null=True,blank=True)
     payment_mode=models.CharField(max_length=100,null=True,blank=True)
     is_paid=models.BooleanField(default=False)
     register=models.ForeignKey(Registration,related_name='payment',on_delete=models.CASCADE)
     pack=models.ForeignKey(Package,related_name='payment',on_delete=models.CASCADE)
+    create_at=models.DateTimeField(auto_now_add=True)
+    updated_at=models.DateTimeField(auto_now=True)
