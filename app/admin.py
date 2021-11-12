@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-#from django.contrib.auth.admin import UserAdmin
-from .forms import *
+#from django.contrib.auth.admin import UserAdmi
 admin.site.site_header = "Karthavyabharath"
 admin.site.index_title = "Welcome to Karthavyabharath Site"
 from .models import *
