@@ -45,7 +45,7 @@ class Registration(AbstractUser):
     residing_state=models.CharField(max_length=100,null=True,blank=True)
     city=models.CharField(max_length=100,null=True,blank=True)
     dp_pic=models.ImageField(upload_to='matri/image',null=True,blank=True)
-    create_at=models.DateTimeField(auto_now_add=True)
+    created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now=True)
 
     

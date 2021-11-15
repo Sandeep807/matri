@@ -12,7 +12,7 @@ class RegistrationAdmin(admin.ModelAdmin):
                     'dosh','height','marital_status','any_disability','family_status',
                     'family_type','family_value','education','employed_in','occupation',
                     'annual_income','work_location','residing_state','city',
-                    'image_customer','create_at','updated_at','otp')
+                    'image_customer','created_at','updated_at','otp')
     search_fields=['mobile_number']
     # add_form=customUserCreationForm
     # form=customeUserChangeForms 
