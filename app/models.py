@@ -44,7 +44,7 @@ class Registration(AbstractUser):
     work_location=models.CharField(max_length=100,choices=work_choices,null=True,blank=True)
     residing_state=models.CharField(max_length=100,null=True,blank=True)
     city=models.CharField(max_length=100,null=True,blank=True)
-    pic=models.ImageField(upload_to='matri/image',null=True,blank=True)
+    dp_pic=models.ImageField(upload_to='matri/image',null=True,blank=True)
     create_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now=True)
 
