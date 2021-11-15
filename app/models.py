@@ -30,7 +30,7 @@ class Registration(AbstractUser):
     caste=models.CharField(max_length=1000,null=True,blank=True)
     gotra=models.CharField(max_length=100,null=True,blank=True)
     peta=models.CharField(max_length=100,null=True,blank=True)
-    dosh=models.CharField(max_length=100,choices=dosh_choices,null=True,blank=True)
+    dosh=models.CharField(max_length=100,null=True,blank=True)
     height=models.CharField(max_length=100,null=True,blank=True)
     marital_status=models.CharField(max_length=100,choices=status_choices,null=True,blank=True)
     any_disability=models.CharField(max_length=100,choices=disability_choices,null=True,blank=True)
