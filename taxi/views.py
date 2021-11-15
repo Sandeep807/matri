@@ -23,19 +23,17 @@ class DriverRegister(APIView):
             if serializer.is_valid():
                 serializer.save()
                 return Response({
-                    'status':'Success',
                     'Details':serializer.data
-                })
+                },status=status.HTTP_200_OK)
             else:
                 return Response({
-                    'status':'Failure',
                     'Error':serializer.errors
-                })
+                },status=status.HTTP_406_NOT_ACCEPTABLE)
         except Exception as e:
             print(e)
             return Response({
                 'Error':'Something went wrong'
-            },status=status.HTTP_404_NOT_FOUND)
+            },status=status.HTTP_400_BAD_REQUEST)
 
     # def get(self,request):
     #     try:
@@ -63,6 +61,9 @@ class DriverRegister(APIView):
                 },status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             print(e)
+            return Response({
+                "message":"Something went wrong"
+            },status=status.HTTP_400_BAD_REQUEST)
     
 
     
@@ -81,20 +82,17 @@ class PaymentDetail(APIView):
             if serializer.is_valid():
                 serializer.save()
                 return Response({
-                    'status':'Success',
                     'Payment details':serializer.data
-                })
+                },status=status.HTTP_200_OK)
             else:
                 return Response({
-                    'status':'Failure',
                     'Error':serializer.errors
-                })
+                },status=status.HTTP_406_NOT_ACCEPTABLE)
         except Exception as e:
             print(e)
             return Response({
-                'status':'Failure',
                 'Message':'Something went wrong'
-            })
+            },status=status.HTTP_400_BAD_REQUEST)
 
     def patch(self,request):
 
@@ -105,18 +103,18 @@ class PaymentDetail(APIView):
                 check.is_paid=True
                 check.save()
                 return Response({
-                    'status':'Success',
                     'Message':'Payment successful'
-                })
+                },status=status.HTTP_200_OK)
             else:
                 return Response({
-                    'status':'Failure',
                     'Message':'Id not found'
-                })
+                },status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             print(e)
+            return Response({
+                'message':'Something went wrong'
+            },status=status.HTTP_400_BAD_REQUEST)
     
-
 class BookingVehicle(APIView):
    
     def post(self,request):
@@ -125,24 +123,22 @@ class BookingVehicle(APIView):
             serialiser=BookingSerialiser(data=data)
             if serialiser.is_valid():
                 serialiser.save()
-                return Response(serialiser.data,status=status.HTTP_200_OK)
+                return Response(data=serialiser.data,status=status.HTTP_200_OK)
             else:
-                return Response({'error':serialiser.errors,'Message':'Invalid data'})
+                return Response({'error':serialiser.errors},status=status.HTTP_406_NOT_ACCEPTABLE)
         except Exception as e:
             print(e)
-            return Response({'Status':'Failure',
-            'Message':'Something went wrong'})
-    
+            return Response({'Message':'Something went wrong'},status=status.HTTP_400_BAD_REQUEST)
     def patch(self,request):
         try:
             data=request.data
             check=Booking.objects.get(id=data.get('id'))
             check.is_cancel=True
             check.save()
-            return Response({'Message':'Booking cancel'})  
+            return Response({'Message':'Booking cancel'},status=status.HTTP_200_OK)  
         except Exception as e:
             print(e)
-            return Response({'Message':'Something went wrong'})
+            return Response({'Message':'Something went wrong'},status=status.HTTP_400_BAD_REQUEST)
 
 class Login(APIView):
     def post(self,request):
@@ -159,37 +155,31 @@ class Login(APIView):
                     print('sandeep')
                     return Response(
                         {
-                            'status':False,
-                            'message':'user not found',
-                            'data':{}
+                            'message':'user not found'
                         }
-                    )
+                    ,status=status.HTTP_404_NOT_FOUND)
                 user_obj= authenticate(mobile_number=mobile_number,password=password)
                 print(user_obj)
 
                 if user_obj is None:
                     return Response({
-                        'status':False,
-                        'message':'Invalid username and password',
-                        'data':{}
-                    })
+                        'message':'Invalid username and password'
+                    },status=status.HTTP_401_UNAUTHORIZED)
                 token,_=Token.objects.get_or_create(user = user_obj)
                 return Response({
-                    'status':True,
                     'Message':'Login success',
                     'data':{
                         'token':str(token)
                     }
-                })
+                },status=status.HTTP_200_OK)
         except Exception as e:
             print(e)
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             print(exc_type, fname, exc_tb.tb_lineno)
             return Response({
-                'status':False,
                 'message':'Something went wrong'
-            })
+            },status=status.HTTP_400_BAD_REQUEST)
 class ChangePassword(APIView):
     def post(self,request):
         try:
@@ -207,33 +197,27 @@ class ChangePassword(APIView):
                             user=authenticate(mobile_number=mobile_number,password=old_password)
                             if user is None:
                                 return Response({
-                                    'status':'Success',
                                     'details':" Old password missmatch"
-                                    })
+                                    },status=status.HTTP_406_NOT_ACCEPTABLE)
                             register.set_password(new_password)
                             register.save()
                             return Response({
-                                        'status':'Success',
                                         'details':"Password change successfully"
-                                    })
+                                    },status=status.HTTP_200_OK)
                         return Response({
-                            'status':'False',
                             'details':"new password and old password are same,please new fill password"
-                            })
+                            },status=status.HTTP_406_NOT_ACCEPTABLE)
                     return Response({
-                                'status':'False',
                                 'details':'new password and confirm passwrod missmatch'  
-                                })
+                                },status=status.HTTP_406_NOT_ACCEPTABLE)
                 return Response({
-                    'status':'False',
                     'details':'mobile number is not found'
-                    })
+                    },status=status.HTTP_404_NOT_FOUND)
             return Response({
-                'status':False,
                 "Error":serialise.errors
-            })
+            },status=status.HTTP_406_NOT_ACCEPTABLE)
                             
         except Exception as e:
             print(e)
-            return Response({'status':404,'message':'Something went wrong'})
+            return Response({'message':'Something went wrong'},status=status.HTTP_400_BAD_REQUEST)
 

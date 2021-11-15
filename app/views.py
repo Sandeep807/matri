@@ -26,17 +26,15 @@ class Register(APIView):
             if serializer.is_valid():
                 serializer.save()
                 return Response({
-                    'status':'Success',
                     'Details':serializer.data
-                })
+                },status=status.HTTP_200_OK)
             else:
-                return Response(data=serializer.errors,status=status.HTTP_404_NOT_FOUND)
+                return Response(data=serializer.errors,status=status.HTTP_406_NOT_ACCEPTABLE)
         except Exception as e:
             print(e)
             return Response({
-                'status':'Failure',
                 'Error':'Something went wrong'
-            })
+            },status=status.HTTP_400_BAD_REQUEST)
 
     def patch(self,request):
         try:
@@ -48,16 +46,14 @@ class Register(APIView):
                 if serializer.is_valid():
                     serializer.save()
                     return Response({
-                        'status':'Success',
                         'message':'Data has been save successfully',
                         'data':serializer.data
-                    })
+                    },status=status.HTTP_200_OK)
                 else:
                         return Response({
-                        'status':'Failure',
                         'message':'Invalid data',
                         'data':serializer.errors
-                    })
+                    },status=status.HTTP_406_NOT_ACCEPTABLE)
             else:
                 return Response({
                     'message':'Mobile number not found'
@@ -65,9 +61,8 @@ class Register(APIView):
         except Exception as e:
             print(e)
             return Response({
-                'status':'Failure',
                 'message':'Something went wrong'
-            })
+            },status=status.HTTP_400_BAD_REQUEST)
 
 class Login(APIView):
     def post(self,request):
@@ -86,18 +81,15 @@ class Login(APIView):
                 user_obj = authenticate(mobile_number=mobile_number,password=password)
                 if user_obj is None:
                     return Response({
-                        'status':False,
                         'message':'Invalid username and password',
-                        'data':{}
-                    })
+                    },status=status.HTTP_401_UNAUTHORIZED)
                 token,_=Token.objects.get_or_create(user = user_obj)
                 return Response({
-                    'status':True,
                     'Message':'Login success',
                     'data':{
                          'token':str(token)
                     }
-                })
+                },status=status.HTTP_200_OK)
         except Exception as e:
             import sys, os
             exc_type, exc_obj, exc_tb = sys.exc_info()
@@ -105,9 +97,8 @@ class Login(APIView):
             print(exc_type, fname, exc_tb.tb_lineno)
             print(e)
             return Response({
-                'status':False,
                 'message':'Something went wrong'
-            })
+            },status=status.HTTP_400_BAD_REQUEST)
 
 # class LogOut(APIView):
 #     def get(self, request, format=None):
@@ -145,30 +136,25 @@ class ChangePassword(APIView):
                             user=authenticate(mobile_number=mobile_number,password=old_password)
                             if user is None:
                                 return Response({
-                                    'status':'Success',
                                     'details':" Old password missmatch"
-                                    })
+                                    },status=status.HTTP_406_NOT_ACCEPTABLE)
                             register.set_password(new_password)
                             register.save()
                             return Response({
-                                        'status':'Success',
                                         'details':"Password change successfully"
-                                    })
+                                    },status=status.HTTP_200_OK)
                         return Response({
-                            'status':'False',
                             'details':"new password and old password are same,please new fill password"
-                            })
+                            },status=status.HTTP_406_NOT_ACCEPTABLE)
                     return Response({
-                                'status':'False',
                                 'details':'new password and confirm passwrod missmatch'  
-                                })
+                                },status=status.HTTP_406_NOT_ACCEPTABLE)
                 return Response({
                     'details':'mobile number is not found'
                     },status=status.HTTP_404_NOT_FOUND)
             return Response({
-                'status':False,
                 "Error":serialise.errors
-            })
+            },status=status.HTTP_406_NOT_ACCEPTABLE)
                             
         except Exception as e:
             print(e)
@@ -193,16 +179,14 @@ class FindFiveView(APIView):
                         obj=Registration.objects.filter(gender='Female')[:5]
                         serializer=RegistrationSerializer(obj,many=True)
                         return Response({
-                            'status':"Success",
                             'details':serializer.data
-                        })
+                        },status=status.HTTP_200_OK)
                     else:
                         obj=Registration.objects.filter(gender='Male')[:5]
                         serializer=RegistrationSerializer(obj,many=True)
                         return Response({
-                            'status':"Success",
                             'details':serializer.data
-                        })
+                        },status=status.HTTP_200_OK)
             r=obj.register
             gender=r.gender
             print(gender)
@@ -217,15 +201,13 @@ class FindFiveView(APIView):
                         obj=Registration.objects.filter(gender='Female')[:5]
                         serializer=RegistrationSerializer(obj,many=True)
                         return Response({
-                            'status':"Success",
                             'details':serializer.data
-                        })
+                        },status=status.HTTP_200_OK)
                     else:
                         obj=Registration.objects.filter(gender='Male')[:5]
                         serializer=RegistrationSerializer(obj,many=True)
                         return Response({
-                            'status':"Success",
-                            'details':serializer.data})
+                            'details':serializer.data},status=status.HTTP_200_OK)
             else:
                 if membership=='Gold':
                     if gender=='Male':
@@ -291,9 +273,8 @@ class GetFullInfo(APIView):
             if data is not None:
                 serializer=RegistrationSerializer(data)
                 return Response({
-                    'status':'Success',
                     'Details':serializer.data
-                })
+                },status=status.HTTP_200_OK)
             else:
                 return Response({
                 'Error':'Mobile number not found'
@@ -320,9 +301,8 @@ class VerifyOtp(APIView):
                         obj.is_active=True
                         obj.save()
                         return Response({
-                            'status':'Success',
                             'Details':'Otp verify successfully'
-                        })
+                        },status=status.HTTP_200_OK)
                     else:
                         return Response({
                             'Details':'Otp not match'
@@ -356,9 +336,8 @@ class PackageView(APIView):
             if serializer.is_valid():
                 serializer.save()
                 return Response({
-                    'status':'Success',
                     'details':serializer.data
-                })
+                },status=status.HTTP_200_OK)
             return Response({
                 'details':serializer.errors
             },status=status.HTTP_406_NOT_ACCEPTABLE)
@@ -384,9 +363,8 @@ class PaymentView(APIView):
             if serializer.is_valid():
                 serializer.save()
                 return Response({
-                    'status':"Success",
                     'details':serializer.data
-                })
+                },status=status.HTTP_200_OK)
             return Response({
                     'details':serializer.errors
                 },status=status.HTTP_406_NOT_ACCEPTABLE)
