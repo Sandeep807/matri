@@ -31,9 +31,9 @@ class Booking(BaseModel):
     ('MINI BUS','MINI BUS'),('SEDAN','SEDAN'),('HATCHBACK','HATCHBACK'))
 
     name=models.CharField(max_length=100)
-    no_of_adults=models.IntegerField(null=True,blank=True)
+    adult=models.IntegerField(null=True,blank=True)
     child_name=models.CharField(max_length=100,null=True,blank=True)
-    no_of_child=models.IntegerField(null=True,blank=True)
+    child=models.IntegerField(null=True,blank=True)
     mobile_number=models.CharField(max_length=15)
     source_address=models.TextField()
     destination_address=models.TextField()
