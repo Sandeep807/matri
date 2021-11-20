@@ -131,7 +131,7 @@ education_choices=(('Select Options','Select Options'),('Aeronautical Engineerin
 ('B.M.M','B.M.M'),('B.Sc','B.Sc'),('B.S.W','B.S.W'),('B.Phil','B.Phil'),('M.A','M.A'),
 ('M.Sc','M.Sc'),('BBA','BBA'),('MBA','MBA'),('Software Engineer','Software Engineer'))
 
-employee_choices=(('Select Options','Select Options'),('Government/PSU','Government/PSU'),('Private','Private'),('Business','Business'),
+employee_choices=(('Government/PSU','Government/PSU'),('Private','Private'),('Business','Business'),
 ('Defence','Defence'),('Self Employed','Self Employed'),('Not Working','Not Working'))
 
 occupation_choices=(('Select Options','Select Options'),('Software Professional','Software Professional'),('Teaching','Teaching'),
