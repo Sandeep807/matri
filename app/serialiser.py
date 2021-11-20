@@ -15,7 +15,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
         model=Registration
         fields=['id','profile_created_by','password','first_name',
         'last_name','email','mobile_number','gender',
-        'dob','religion','mother_tongue','caste','dosh','height','family_value',
+        'dob','religion','mother_tongue','caste','dosh','peta','height','family_value',
         'marital_status','any_disability','family_status','family_type',
         'education','employed_in','occupation','annual_income',
         'work_location','residing_state','city','pic']
