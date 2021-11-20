@@ -39,7 +39,7 @@ class Booking(BaseModel):
     destination_address=models.TextField()
     booking_date=models.DateField(null=True,blank=True)
     booking_time=models.TimeField()
-    type_vehicle=models.CharField(max_length=100,choices=vehicle)
+    type_vehicle=models.CharField(max_length=100,choices=vehicle,null=True,blank=True)
     amount=models.FloatField(default=500)
     is_cancel=models.BooleanField(default=False)
     driver=models.ForeignKey(DriverRegistration,related_name='bookings',on_delete=models.CASCADE,null=True,blank=True)

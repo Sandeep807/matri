@@ -13,7 +13,7 @@ class DriverRegistrationSerialiser(serializers.ModelSerializer):
 class BookingSerialiser(serializers.ModelSerializer):
     class Meta:
         model=Booking
-        exclude=['create_at','updated_at']
+        exclude=['created_at','updated_at']
 
 class DriverRegistrationSerialiser1(serializers.ModelSerializer):
     bookings=BookingSerialiser(read_only=True,many=True)
