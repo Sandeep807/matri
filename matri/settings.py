@@ -139,11 +139,11 @@ else:
 AUTH_USER_MODEL='app.Registration'
 #karthavyabharatapp@gmail.com
 #karthavyabharata1020
-#EMAIL_HOST_PASSWORD ='rmzdokxsygzokxyu'
+#EMAIL_HOST_PASSWORD =''
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'karthavyabharatapp@gmail.com'
-EMAIL_HOST_PASSWORD ='qleowxqlboamtqxu'
+EMAIL_HOST_PASSWORD =''
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
